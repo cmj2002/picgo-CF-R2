@@ -7,7 +7,7 @@ import moment from 'moment'
 function handleError(err: any, ctx: picgo) {
   ctx.log.error('Cloudflare R2 uploader error: ' + JSON.stringify(err))
   ctx.emit('notification', {
-    title: '上传失败！',
+    title: 'Upload failed!',
     body: JSON.stringify(err)
   })
   throw err;
@@ -82,7 +82,7 @@ const config = (ctx: picgo): IPluginConfig[] => {
       name: 'remoteUrl',
       type: 'input',
       default: userConfig?.remoteUrl || '',
-      message: "remote URL(Don't miss https:// at begining or / at the end)",
+      message: "remote URL(Don't miss https:// at beginning or / at the end)",
       required: true
     },
     {
@@ -97,7 +97,7 @@ const config = (ctx: picgo): IPluginConfig[] => {
       type: 'input',
       default: userConfig?.uploadPath || '/',
       required: true,
-      message: "Upload path(Should be contained in ALLOW_PATHS)"
+      message: "Upload path(Should be contained in allowPaths)"
     }
   ];
 }
