@@ -4,6 +4,12 @@ import path from 'path'
 import crypto from 'crypto'
 import moment from 'moment'
 
+function dynamicImport(path: string):any {
+  // F**k TypeScript
+  // See https://github.com/microsoft/TypeScript/issues/43329 for why we need this
+  return eval('import(path)')
+}
+
 function handleError(err: any, ctx: picgo) {
   ctx.log.error('Cloudflare R2 uploader error: ' + JSON.stringify(err))
   ctx.emit('notification', {
@@ -45,6 +51,7 @@ async function handle(ctx: picgo) {
       // auth=sha256(date+targetPath+secret)
       const toHash= `${dateHeader}${targetPath}${userConfig.secret}`
       const auth = crypto.createHash('sha256').update(toHash).digest('hex');
+      const fileTypeFromBuffer=(await dynamicImport('file-type')).fileTypeFromBuffer;
       const res = await ctx.request({
         method: 'put',
         uri: `${remoteUrl}${targetPath}`,
@@ -53,7 +60,7 @@ async function handle(ctx: picgo) {
         headers: {
           "Authorization": `Bearer ${auth}`,
           "Date": dateHeader,
-          "Content-Type": "application/octet-stream",
+          "Content-Type": ((await fileTypeFromBuffer(image)).mime)??"application/octet-stream",
           "Content-Length": image.length
         }
       })
