@@ -17,7 +17,7 @@ function handleError(err: any, ctx: picgo) {
 interface Options {
   remoteUrl: string,
   secret: string,
-  uploadPath: string
+  uploadPath: string | undefined
 }
 
 async function handle(ctx: picgo) {
@@ -25,9 +25,12 @@ async function handle(ctx: picgo) {
   if (!userConfig) {
     handleError("config not found!", ctx);
     return ctx;
-  } else if (!userConfig.remoteUrl || !userConfig.uploadPath || !userConfig.secret) {
+  } else if (!userConfig.remoteUrl || !userConfig.secret) {
     handleError("config invalid!", ctx);
     return ctx;
+  }
+  if (userConfig.uploadPath === undefined) {
+    userConfig.uploadPath = '';
   }
   try {
     let imgList = ctx.output;
@@ -96,8 +99,8 @@ const config = (ctx: picgo): IPluginConfig[] => {
     {
       name: 'uploadPath',
       type: 'input',
-      default: userConfig?.uploadPath || '/',
-      required: true,
+      default: userConfig?.uploadPath || '',
+      required: false,
       message: "Upload path(Should be contained in allowPaths)"
     }
   ];
