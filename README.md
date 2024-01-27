@@ -1,5 +1,8 @@
 # picgo-plugin-cloudflare-r2
 
+> [!WARNING]
+> The repo is archived and no longer maintained. It is recommended to use the S3 API of R2 for uploading and publish it through Custom Domain.
+
 PicGo plugin for [cmj2002/CF-R2-ImageBed](https://github.com/cmj2002/CF-R2-ImageBed)
 
 ## Configuration
